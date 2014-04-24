@@ -1,11 +1,11 @@
-## The two functions below allow calculating and caching the inverse of a
-## matrix, so that in subsequent calls for the inverse of this matrix, the
-## inverse can be pulled from the cache, rather than having to calculate the
-## inverse a second time.
+Caching the inverse of a matrix
+========================================================
 
-## The makeCacheMatrix function creates a list of four functions to get and set
-## the source matrix and to get and set the inverse of that matrix.
+The two functions below allow calculating and caching the inverse of a matrix, so that in subsequent calls for the inverse of this matrix, the inverse can be pulled from the cache, rather than having to calculate the inverse a second time.
 
+The makeCacheMatrix function below creates a list of four functions to get and set the source matrix and to get and set the inverse of that matrix.
+
+```{r}
 makeCacheMatrix <- function(x = matrix()) {
     
     ## initialize the inverse to null
@@ -31,11 +31,11 @@ makeCacheMatrix <- function(x = matrix()) {
          setinverse = setinverse,
          getinverse = getinverse)
 }
+```
 
-## The cacheSolve function gets the inverse of a matrix by first checking if the
-## inverse has already been cached. If it isn't, it calculates the inverse
-## and caches it, if it is, then it returns the cached inverse.
+The cacheSolve function gets the inverse of a matrix by first checking if the inverse has already been cached. If it isn't, it calculates the inverse and caches it, if it is, then it returns the cached inverse.
 
+```{r}
 cacheSolve <- function(x, ...) {
     
     ## try to get the inverse of the matrix x
@@ -60,3 +60,26 @@ cacheSolve <- function(x, ...) {
     ## lastly, return the calculated inverse
     i
 }
+```
+
+Now we make a 5-by-5 matrix to test this procedure on:
+
+```{r}
+m = matrix(rnorm(25),5,5)
+m
+```
+
+Let's see:
+
+```{r}
+x = makeCacheMatrix(m)
+i = cacheSolve(x)
+i
+```
+
+And let's verify the results by calcuting the matrix product of the original matrix and its inverse which should return the identity matrix:
+```{r}
+format(round(i %*% m, 0), nsmall = 0)
+```
+
+
